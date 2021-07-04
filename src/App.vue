@@ -1,7 +1,7 @@
 <template>
-	<div class="container-box">
-		<div class="bg-dark h-screen">
-			<div class="flex" style="height: 90vh">
+	<div class="container-box no-select">
+		<div class="bg-dark h-screen" style="overflow-y:hidden;overflow-x:hidden;">
+			<div class="flex" style="height: 90vh;">
 				<!--side nav -->
 				<div v-show="nav_show" class="w-56 bg-black h-full flex-none side-nav-div">
 					<div class="p-6 flex item center justify-between">
@@ -33,23 +33,21 @@
 						</button>
 					</div>
 					<div class="h-px w-full bg-light my-3"></div>
-					<div class="mx-5" style="color: white">
-						<button
-							class="px-3 py-2 hover:text-white hover:text-white"
-							style="zoom: 0.5; width: 50px; height: 50px; border-radius: 50%; border: 1px solid white"
-						>
-							<i class="material-icons mr-3 text-sm" style="zoom: 1.5">arrow_downward</i>
-						</button>
-						<span class="px-3 text-sm font-semibold text-lightest hover:text-white" style="cursor: pointer"
-							>Install App</span
-						>
-					</div>
-					<div class="relative pt-8">
+
+					<div class="relative pt-3">
 						<div class="flex items-center justify-start pl-2">
-							<img src="./assets/Vue_Logo.png" style="width: 200px" alt="playing music" />
+							<img
+								:src="`${this.currentPlaying.src}`"
+								alt="playing music"
+								style="height: 200px; width: 205px"
+							/>
 						</div>
-						<h1 class="pl-2 text-sm font-semibold text-white tracking wide">Currently Playing Song Name</h1>
-						<h2 class="pl-2 text-xs text-lightest text-white tracking wide">Artist Name</h2>
+						<h1 class="pl-2 mt-2 text-sm font-semibold text-white tracking wide">
+							{{ this.currentPlaying.title }}
+						</h1>
+						<h2 class="pl-2 text-xs text-lightest text-white tracking wide">
+							{{ this.currentPlaying.artist }}
+						</h2>
 					</div>
 				</div>
 
@@ -81,43 +79,6 @@
 						>
 							<i class="material-icons mr-3 text-sm hover:text-white" style="zoom: 1.5">arrow_right</i>
 						</button>
-
-						<div style="float: right">
-							<button
-								@click="showDropdown = !showDropdown"
-								class="
-									px-3
-									py-2
-									mt-3
-									ml-2
-									rounded-full
-									flex
-									items-center
-									hover:text-white hover:text-white
-								"
-								style="zoom: 0.7; border: 1px solid white"
-							>
-								<img src="./assets/Vue_Logo.png" class="rounded-full h-6 w-6" />
-								<span class="text-white font-semibold text-xs ml-2" style="zoom: 1.5"
-									>Username abc</span
-								>
-								<i class="material-icons ml-2" style="color: white">arrow_drop_down</i>
-							</button>
-							<div class="mt-1" v-if="showDropdown">
-								<button
-									class="w-full bg-light text-white text-xs px-3 py-2 flex items-center justify-start"
-								>
-									<i class="material-icons mr-3">logout</i>
-									<p>Logout</p>
-								</button>
-								<button
-									class="w-full bg-light text-white text-xs px-3 py-2 flex items-center justify-start"
-								>
-									<i class="material-icons mr-3">login</i>
-									<p>Login</p>
-								</button>
-							</div>
-						</div>
 					</div>
 					<!--header end-->
 
@@ -145,15 +106,29 @@
 									"
 									style="cursor: pointer"
 								>
-									<div class="bg-green rounded-full h-10 w-10 flex item center justify-center">
+									<div
+										class="bg-green rounded-full h-10 w-10 flex item center justify-center"
+										:id="recent.id"
+										@click="recentPlay(recent.id)"
+									>
 										<i class="material-icons text-2xl pt-1" style="color: white">play_arrow</i>
 									</div>
+									<div
+										class="rounded-full h-10 w-10 flex item center justify-center"
+										style="
+											color: white;
+											top: 10px;
+											position: absolute;
+											right: 35px;
+											background: grey;
+										"
+									>
+										<i class="material-icons text-2xl pt-1">favorite</i>
+									</div>
 								</div>
+
 								<div class="bg-light w-full h-auto p-5">
-									<img
-										:src="require(`@/assets/${recent.src}.png`)"
-										class="w-full h-auto shadow rounded mb-2"
-									/>
+									<img :src="`${recent.src}`" class="w-full h-auto shadow rounded mb-2" />
 									<h1 class="text-sm font-semibold text-white tracking wide">
 										{{ recent.title }}
 									</h1>
@@ -167,7 +142,7 @@
 					<!--cards recent played  close-->
 
 					<!--cards made for you -->
-					<div class="px-6 py-5">
+					<div class="px-6 py-5" style="padding-bottom:25px;">
 						<div class="px-3 py-1 flex item center justify-between">
 							<h1 class="text-2xl font-semibold text-white tracking-wider">Made for You</h1>
 							<h2 class="text-xs font-semibold text-white tracking-wider hover:underline uppercase">
@@ -191,22 +166,45 @@
 										opacity-0
 										hover:opacity-100
 									"
+									:id="custom.id + 'hover'"
 									style="cursor: pointer"
 								>
-									<div class="bg-green rounded-full h-10 w-10 flex item center justify-center">
+									<div
+										class="bg-green rounded-full h-10 w-10 flex item center justify-center"
+										:id="custom.id"
+										@click="customPlay(custom.id)"
+									>
 										<i class="material-icons text-2xl pt-1" style="color: white">play_arrow</i>
 									</div>
+									<div
+										class="rounded-full h-10 w-10 flex item center justify-center"
+										style="
+											color: white;
+											top: 10px;
+											position: absolute;
+											right: 35px;
+											background: grey;
+										"
+									>
+										<i class="material-icons text-2xl pt-1">favorite</i>
+									</div>
 								</div>
+
 								<div class="bg-light w-full h-auto p-5">
-									<img
-										:src="require(`@/assets/${custom.src}.png`)"
-										class="w-full h-auto shadow rounded mb-2"
-									/>
+									<img :src="`${custom.src}`" class="w-full h-auto shadow rounded mb-2" />
 									<h1 class="text-sm font-semibold text-white tracking wide">
-										{{ custom.title }}
+										{{
+											custom.title.length > 14
+												? custom.title.substring(0, 13) + '...'
+												: custom.title
+										}}
 									</h1>
 									<h2 class="text-xs text-lightest text-white tracking wide">
-										{{ custom.artist }}
+										{{
+											custom.artist.length > 14
+												? custom.artist.substring(0, 13) + '...'
+												: custom.artist
+										}}
 									</h2>
 								</div>
 							</div>
@@ -216,20 +214,38 @@
 				</div>
 			</div>
 			<!--play bar -->
-			<div class="w-full bg-light" style="height: 10vh; color: white">
+			<div
+				@click="showplayer()"
+				class="w-full bg-light"
+				style="
+					height: 10vh;
+					color: white;
+					cursor: pointer;
+					float: both;
+					position: fixed;
+					bottom: 0px;
+					z-index: 9999;
+				"
+			>
 				<div class="px-3 py-1 flex item center justify-between">
 					<div class="relative">
 						<div class="flex items-center justify-center pl-2">
-							<img src="./assets/Vue_Logo.png" class="w-15 h-12 shadow pt-2 mt-1" alt="playing music" />
+							<img
+								:src="`${this.currentPlaying.src}`"
+								class="w-15 h-12 shadow pt-2 mt-1"
+								alt="playing music"
+								style="width: 40px; height: 45px"
+							/>
 							<h1 class="pl-2 text-sm font-semibold text-white tracking wide">
-								Currently Playing Song Name
+								{{ this.currentPlaying.title }}
 							</h1>
-							<h2 class="pl-2 text-xs text-lightest text-white tracking wide">Artist Name</h2>
+							<h2 class="pl-2 text-xs text-lightest text-white tracking wide">
+								{{ this.currentPlaying.artist }}
+							</h2>
 						</div>
 					</div>
 					<div class="flex item center justify-around">
 						<i
-							@click="showplayer()"
 							class="material-icons mr-3 text-sm hover:text-white mt-1"
 							style="zoom: 2; cursor: pointer"
 							id="arrow_btn_tog"
@@ -246,15 +262,23 @@
 				</div>
 			</div>
 		</div>
-		<div class="bg-dark player-div" style="position: absolute; top: 0; height: 50vh; width: 100vw; z-index: 100">
-			<Player style="z-index: 100" />
+		<div class="bg-dark player-div" style="top: 0; height: 50vh; width: 100vw; z-index: 100">
+			<Player
+				style="z-index: 100"
+				:playList="this.playList"
+				:playSong="this.currentPlaying.playing"
+				@update-selected-index="updateSelectedIndex"
+				@click-on-play="clickOnPlay"
+				@click-on-pause="clickOnPause"
+			/>
 		</div>
 		<!-- <router-view /> -->
 	</div>
 </template>
 
 <script>
-import Player from './components/Home.vue';
+import Player from './components/Player.vue';
+import axios from 'axios';
 export default {
 	components: {
 		Player,
@@ -266,39 +290,93 @@ export default {
 				{ id: 'search', name: 'Search', icon: 'search' },
 				{ id: 'Library', name: 'Your Library', icon: 'bar_chart' },
 			],
-			setID: 'home',
-			showDropdown: false,
 			recents: [
-				{ src: 'Vue_Logo', title: 'Title - recent', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - recent', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - recent', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - recent', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - recent', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - recent', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - recent', artist: 'Shubham' },
+				{
+					src: 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/126177408/original/8d52c9af80ab728d2f426db259f49ede0ed4ae21/create-an-outstanding-video-thumbnail.jpg',
+					title: 'Title - recent',
+					artist: 'Shubham',
+					id: 'mid0',
+					file: 'https://firebasestorage.googleapis.com/v0/b/streamer-22d50.appspot.com/o/01%20-%20Tera%20Suroor(MyMp3Song.Com).mp3?alt=media&token=c039f798-9e9d-43a4-8e8a-62d8506eb8c3',
+				},
+				{
+					src: 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/126177408/original/8d52c9af80ab728d2f426db259f49ede0ed4ae21/create-an-outstanding-video-thumbnail.jpg',
+					title: 'Title - recent',
+					artist: 'Shubham',
+					id: 'mid3',
+					file: 'https://firebasestorage.googleapis.com/v0/b/streamer-22d50.appspot.com/o/01%20-%20Tera%20Suroor(MyMp3Song.Com).mp3?alt=media&token=c039f798-9e9d-43a4-8e8a-62d8506eb8c3',
+				},
+				{
+					src: 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/126177408/original/8d52c9af80ab728d2f426db259f49ede0ed4ae21/create-an-outstanding-video-thumbnail.jpg',
+					title: 'Title - recent',
+					artist: 'Shubham',
+					id: 'mid4',
+					file: 'https://firebasestorage.googleapis.com/v0/b/streamer-22d50.appspot.com/o/01%20-%20Tera%20Suroor(MyMp3Song.Com).mp3?alt=media&token=c039f798-9e9d-43a4-8e8a-62d8506eb8c3',
+				},
+				{
+					src: 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/126177408/original/8d52c9af80ab728d2f426db259f49ede0ed4ae21/create-an-outstanding-video-thumbnail.jpg',
+					title: 'Title - recent',
+					artist: 'Shubham',
+					id: 'mid5',
+					file: 'https://firebasestorage.googleapis.com/v0/b/streamer-22d50.appspot.com/o/01%20-%20Tera%20Suroor(MyMp3Song.Com).mp3?alt=media&token=c039f798-9e9d-43a4-8e8a-62d8506eb8c3',
+				},
+				{
+					src: 'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/126177408/original/8d52c9af80ab728d2f426db259f49ede0ed4ae21/create-an-outstanding-video-thumbnail.jpg',
+					title: 'Title - recent',
+					artist: 'Shubham',
+					id: 'mid6',
+					file: 'https://firebasestorage.googleapis.com/v0/b/streamer-22d50.appspot.com/o/01%20-%20Tera%20Suroor(MyMp3Song.Com).mp3?alt=media&token=c039f798-9e9d-43a4-8e8a-62d8506eb8c3',
+				},
 			],
-			customs: [
-				{ src: 'Vue_Logo', title: 'Title - customs', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - customs', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - customs', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - customs', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - customs', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - customs', artist: 'Shubham' },
-				{ src: 'Vue_Logo', title: 'Title - customs', artist: 'Shubham' },
-			],
+			customs: [],
 
+			currentPlaying: {
+				src: 'https://m.media-amazon.com/images/M/MV5BMjE2MTcyMjMyNF5BMl5BanBnXkFtZTgwODg2ODU1MDE@._V1_UY1200_CR90,0,630,1200_AL_.jpg',
+				title: 'Select music',
+				artist: 'Shubham',
+				id: null,
+				playing: false,
+				file: 'https://firebasestorage.googleapis.com/v0/b/streamer-22d50.appspot.com/o/01%20-%20Tera%20Suroor(MyMp3Song.Com).mp3?alt=media&token=c039f798-9e9d-43a4-8e8a-62d8506eb8c3',
+			},
+
+			playList: [],
+
+			setID: 'home',
 			player: false,
-			nav: true,
-			nav_show: true,
+			nav: false,
+			nav_show: false,
 		};
 	},
 	methods: {
-		closeMusic(){
-			console.log("close")
+		updateSelectedIndex(id) {
+			this.stop(this.currentPlaying.id);
+			this.startAndSet(id);
 		},
+		clickOnPlay(id) {
+			document.getElementById(id + 'hover').classList.remove('opacity-0');
+
+			document.getElementById(id + 'hover').classList.add('opacity-100');
+
+			document.getElementById(
+				id
+			).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;padding-left:145px;">stop_arrow</i>`;
+		},
+		clickOnPause(id) {
+			document.getElementById(id + 'hover').classList.remove('opacity-100');
+
+			document.getElementById(id + 'hover').classList.add('opacity-0');
+
+			document.getElementById(
+				id
+			).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;">play_arrow</i>`;
+		},
+		closeMusic() {
+			console.log('close');
+		},
+
 		showplayer() {
 			if (!this.player) {
 				let div = document.getElementsByClassName('player-div')[0].style;
+				div.position = 'absolute';
 				div.visibility = 'visible';
 				div.opacity = '1';
 				div.transform = 'translateY(0%)';
@@ -314,6 +392,7 @@ export default {
 
 			this.player = !this.player;
 		},
+
 		toggleNav() {
 			if (!this.nav) {
 				let div = document.getElementsByClassName('side-nav-div')[0].style;
@@ -333,10 +412,137 @@ export default {
 
 			this.nav = !this.nav;
 		},
-		getImg(obj) {
-			console.log(obj);
-			return obj.src;
+
+		// Handling music play
+
+		startAndSet(id) {
+			// start clicked music
+			this.start(id);
+
+			// set playing song
+			let music = [...this.recents, ...this.customs].filter((ele) => {
+				return ele.id === id;
+			});
+
+			this.currentPlaying = music[0];
+			this.currentPlaying.playing = true;
 		},
+
+		start(id) {
+			document.getElementById(id + 'hover').classList.remove('opacity-0');
+
+			document.getElementById(id + 'hover').classList.add('opacity-100');
+
+			// start music
+			document.getElementById(
+				id
+			).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;padding-left:145px;">stop_arrow</i>`;
+
+			this.currentPlaying.playing = true;
+		},
+
+		stop(id) {
+			document.getElementById(id + 'hover').classList.remove('opacity-100');
+
+			document.getElementById(id + 'hover').classList.add('opacity-0');
+
+			// start music
+			document.getElementById(
+				id
+			).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;">play_arrow</i>`;
+
+			this.currentPlaying.playing = false;
+		},
+
+		stopStartAndSet(id) {
+			// stop playing song
+			document.getElementById(
+				this.currentPlaying.id
+			).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;">play_arrow</i>`;
+
+			document.getElementById(this.currentPlaying.id + 'hover').classList.remove('opacity-100');
+
+			document.getElementById(this.currentPlaying.id + 'hover').classList.add('opacity-0');
+
+			this.start(id);
+
+			// set playing song
+			let music = [...this.recents, ...this.customs].filter((ele) => {
+				return ele.id === id;
+			});
+			this.currentPlaying = music[0];
+			this.currentPlaying.playing = true;
+		},
+
+		recentPlay(id) {
+			if (this.currentPlaying.id === null) {
+				this.startAndSet(id);
+			} else {
+				if (this.currentPlaying.playing && this.currentPlaying.id === id) {
+					this.stop(id);
+				} else if (this.currentPlaying.playing && this.currentPlaying.id !== id) {
+					this.stopStartAndSet(id);
+				} else if (!this.currentPlaying.playing && this.currentPlaying.id === id) {
+					this.start(id);
+				} else if (!this.currentPlaying.playing && this.currentPlaying.id !== id) {
+					this.startAndSet(id);
+				}
+			}
+
+			if (this.currentPlaying.playing) {
+				let arrList = [...this.recents];
+				let index = arrList.findIndex((item) => item.id === this.currentPlaying.id);
+
+				if (index >= 0) this.playList = arrList.splice(index);
+			}
+		},
+
+		customPlay(id) {
+			if (this.currentPlaying.id === null) {
+				this.startAndSet(id);
+			} else {
+				if (this.currentPlaying.playing && this.currentPlaying.id === id) {
+					this.stop(id);
+				} else if (this.currentPlaying.playing && this.currentPlaying.id !== id) {
+					this.stopStartAndSet(id);
+				} else if (!this.currentPlaying.playing && this.currentPlaying.id === id) {
+					this.start(id);
+				} else if (!this.currentPlaying.playing && this.currentPlaying.id !== id) {
+					this.startAndSet(id);
+				}
+			}
+
+			if (this.currentPlaying.playing) {
+				let arrList = [...this.customs];
+				let index = arrList.findIndex((item) => item.id === this.currentPlaying.id);
+
+				if (index >= 0) this.playList = arrList.splice(index);
+			}
+		},
+	},
+
+	mounted() {
+		axios
+			.get('https://us-central1-streamer-22d50.cloudfunctions.net/getMusic')
+			.then((response) => {
+				// handle success
+				console.log(response.data);
+				response.data.forEach((ele) => {
+					let obj = {
+						artist: ele.artist,
+						file: ele.downloadUrl,
+						genre: ele.genre,
+						id: ele.id,
+						title: ele.title,
+						src: 'https://www.legalzoom.com/sites/lz.com/files/inline-images/xwoman-blue-dress-playing-blue-guitar.jpg.pagespeed.ic.oksHaDquuG.jpg',
+					};
+					this.customs.push(obj);
+				});
+			})
+			.catch(function (error) {
+				// handle error
+				console.log(error);
+			});
 	},
 
 	created() {
@@ -350,6 +556,16 @@ export default {
 </script>
 
 <style>
+::selection {
+	color: none;
+	background: none;
+}
+/* For Mozilla Firefox */
+::-moz-selection {
+	color: none;
+	background: none;
+}
+
 button {
 	outline: none !important;
 }
@@ -366,14 +582,28 @@ button {
 	transition: all 0.3s ease-out;
 }
 .html {
+	overflow-x: hidden;
 	overflow-y: scroll;
-	scrollbar-width: none; /* Firefox */
 	-ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+body{
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 html::-webkit-scrollbar {
 	/* WebKit */
 	width: 0;
 	height: 0;
+}
+
+.no-select {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 @media (max-width: 420px) {
