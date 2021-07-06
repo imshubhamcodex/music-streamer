@@ -6,7 +6,7 @@ const routes = [
     path: "/player",
     name: "Home",
     component: Player,
-  }
+  },
 ];
 
 const router = createRouter({
