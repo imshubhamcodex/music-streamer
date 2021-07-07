@@ -407,8 +407,12 @@ export default {
 		},
 
 		favFun() {
+			if (this.nav_show) {
+				this.toggleNav();
+			}
 			this.setID = 'favorite';
 			this.fav = [];
+
 			if (JSON.parse(localStorage.getItem('fav_tracks')) === null) {
 				let fav_tracks = [];
 				localStorage.setItem('fav_tracks', JSON.stringify(fav_tracks));
@@ -418,6 +422,7 @@ export default {
 					for (let i = 0; i < fav_tracks.length; i++) {
 						for (let j = 0; j < this.customs.length; j++) {
 							if (this.customs[j].id === fav_tracks[i]) {
+								this.customs[j].fav = true;
 								this.fav.unshift(this.customs[j]);
 								break;
 							}
@@ -451,8 +456,6 @@ export default {
 
 			document.getElementById('recents_head').textContent = "Your's Favorite";
 			this.showRedirect = false;
-
-			this.toggleNav();
 		},
 		sideNavs(id) {
 			this.setID = id;
@@ -465,10 +468,14 @@ export default {
 					let recent_tracks = JSON.parse(localStorage.getItem('recent_tracks'));
 					if (recent_tracks.length > 0) {
 						this.recents = [];
+						this.tempRecents = [];
 						for (let i = 0; i < recent_tracks.length; i++) {
 							for (let j = 0; j < this.customs.length; j++) {
 								if (this.customs[j].id === recent_tracks[i]) {
 									this.recents.push(this.customs[j]);
+									if (i < 12) {
+										this.tempRecents.push(this.customs[j]);
+									}
 									break;
 								}
 							}
@@ -843,6 +850,9 @@ export default {
 					return ele !== arr_id[0];
 				});
 
+				let index_fav_custom = this.customs.findIndex((item) => item.id === arr_id[0]);
+				this.customs[index_fav_custom].fav = false;
+				
 				localStorage.setItem('fav_tracks', JSON.stringify(new_fav_tracks));
 
 				if (arr_id[2] === 'custom') {
