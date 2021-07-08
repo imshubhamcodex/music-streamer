@@ -18,7 +18,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3" style="max-width: 20px">{{ page.icon }}</i>
-							<p>{{ page.name }}</p>
+							<p>{{ page.name }}  {{page.id==='home'? "( "+all_songs +" )":' '}} </p>
 						</button>
 					</div>
 					<div class="mx-2" style="color: white">
@@ -30,25 +30,84 @@
 							}`"
 						>
 							<i class="material-icons mr-3">favorite</i>
-							<p>Favorite</p>
+							<p>Favorite ( {{this.fav.length}} )</p>
+						</button>
+						<button
+							@click="playlist('love')"
+							:class="` mt-2 w-full text-xs font-semibold rounded px-3 py-2 flex items-center justify-start ${
+								setID === 'love' ? 'bg-light text-white' : 'text-lighest'
+							}`"
+						>
+							<i class="material-icons mr-3">volunteer_activism</i>
+							<p>Love  ( {{ love_songs }} )</p>
+						</button>
+						<button
+							@click="playlist('party')"
+							:class="` mt-2 w-full text-xs font-semibold rounded px-3 py-2 flex items-center justify-start ${
+								setID === 'party' ? 'bg-light text-white' : 'text-lighest'
+							}`"
+						>
+							<i class="material-icons mr-3">celebration</i>
+							<p>Party  ( {{ party_songs }} )</p>
+						</button>
+						<button
+							@click="playlist('hip-hop')"
+							:class="` mt-2 w-full text-xs font-semibold rounded px-3 py-2 flex items-center justify-start ${
+								setID === 'hip-hop' ? 'bg-light text-white' : 'text-lighest'
+							}`"
+						>
+							<i class="material-icons mr-3">nightlife</i>
+							<p>Hip Hop  ( {{ hip_hop_songs }} )</p>
+						</button>
+						<button
+							@click="playlist('classical')"
+							:class="` mt-2 w-full text-xs font-semibold rounded px-3 py-2 flex items-center justify-start ${
+								setID === 'classical' ? 'bg-light text-white' : 'text-lighest'
+							}`"
+						>
+							<i class="material-icons mr-3">piano</i>
+							<p>Classical  ( {{ classical_songs }} ) </p>
+						</button>
+						<button
+							@click="playlist('pop')"
+							:class="` mt-2 w-full text-xs font-semibold rounded px-3 py-2 flex items-center justify-start ${
+								setID === 'pop' ? 'bg-light text-white' : 'text-lighest'
+							}`"
+						>
+							<i class="material-icons mr-3">equalizer</i>
+							<p>Pop  ( {{ pop_songs }} )</p>
+						</button>
+						<button
+							@click="playlist('rock')"
+							:class="` mt-2 w-full text-xs font-semibold rounded px-3 py-2 flex items-center justify-start ${
+								setID === 'rock' ? 'bg-light text-white' : 'text-lighest'
+							}`"
+						>
+							<i class="material-icons mr-3">speaker</i>
+							<p>Rock  ( {{ rock_songs }} )</p>
+						</button>
+						<button
+							@click="playlist('sad')"
+							:class="` mt-2 w-full text-xs font-semibold rounded px-3 py-2 flex items-center justify-start ${
+								setID === 'sad' ? 'bg-light text-white' : 'text-lighest'
+							}`"
+						>
+							<i class="material-icons mr-3">sentiment_dissatisfied</i>
+							<p>Sad  ( {{ sad_songs }} )</p>
 						</button>
 					</div>
 					<div class="h-px w-full bg-light my-3"></div>
 
-					<div class="relative pt-3">
-						<div class="flex items-center justify-start pl-2">
+					<div class="relative pt-0 mt-0" style="margin-top: -5px">
+						<!-- <div class="flex items-center justify-start pl-2">
 							<img
 								:src="`${this.currentPlaying.src}`"
 								alt="playing music"
 								style="height: 200px; width: 205px"
 							/>
-						</div>
-						<h1 class="pl-2 mt-2 text-sm font-semibold text-white tracking wide">
-							{{ this.currentPlaying.title }}
-						</h1>
-						<h2 class="pl-2 text-xs text-lightest text-white tracking wide">
-							{{ this.currentPlaying.artist }}
-						</h2>
+						</div> -->
+						<h1 class="pl-2 mt-0 text-sm font-semibold text-white tracking wide">Crafted with ❤️</h1>
+						<h2 class="pl-2 text-xs text-lightest text-white tracking wide">By Shubham</h2>
 					</div>
 				</div>
 
@@ -374,6 +433,15 @@ export default {
 			nav_show: false,
 
 			closePlayer: false,
+
+			all_songs: 0,
+			love_songs: 0,
+			party_songs: 0,
+			hip_hop_songs: 0,
+			classical_songs: 0,
+			pop_songs: 0,
+			rock_songs: 0,
+			sad_songs:0
 		};
 	},
 	methods: {
@@ -404,6 +472,52 @@ export default {
 			} else {
 				document.getElementById('see_all_recent').textContent = 'hide';
 			}
+		},
+
+		async playlist(id) {
+			this.setID = id;
+			await axios
+				.get('https://us-central1-streamer-22d50.cloudfunctions.net/getMusicOfGenre?genre=' + id)
+				.then((res) => {
+					// console.log(res.data);
+					let data = [];
+					res.data.forEach((ele) => {
+						let obj = {
+							artist: ele.artist,
+							file: ele.downloadUrl,
+							genre: ele.genre,
+							id: ele.id,
+							title: ele.title,
+							src: ele.imageUrl,
+						};
+						data.push(obj);
+					});
+					this.recents = data;
+
+					if (data.length >= 12) this.tempRecents = data.slice(0, 12);
+					else this.tempRecents = data;
+
+					if (document.getElementById(this.currentPlaying.id + 'hover-recent') !== null) {
+						document
+							.getElementById(this.currentPlaying.id + 'hover-recent')
+							.classList.remove('opacity-100');
+						document.getElementById(this.currentPlaying.id + 'hover-recent').classList.add('opacity-0');
+						document.getElementById(
+							this.currentPlaying.id + 'recent'
+						).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;">play_arrow</i>`;
+					}
+
+					if (document.getElementById(this.currentPlaying.id + 'hover') !== null) {
+						document.getElementById(this.currentPlaying.id + 'hover').classList.remove('opacity-0');
+						document.getElementById(this.currentPlaying.id + 'hover').classList.add('opacity-100');
+						document.getElementById(
+							this.currentPlaying.id
+						).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;padding-left:145px;">stop_arrow</i>`;
+					}
+
+					document.getElementById('recents_head').textContent = id.charAt(0).toUpperCase() + id.slice(1);
+					this.showRedirect = false;
+				});
 		},
 
 		favFun() {
@@ -542,7 +656,6 @@ export default {
 			}
 		},
 		closeMusic() {
-			console.log('close');
 			this.stop(this.currentPlaying.id);
 			this.currentPlaying.playing = false;
 			this.closePlayer = true;
@@ -751,11 +864,21 @@ export default {
 								this.currentPlaying.genre
 						)
 						.then((res) => {
-							console.log(res.data);
 							this.playList = arrList.splice(index);
 							res.data.forEach((ele) => {
 								let idx = this.playList.findIndex((item) => item.id === ele.id);
-								if (idx < 0) this.playList.push(ele);
+
+								if (idx < 0) {
+									let obj = {
+										artist: ele.artist,
+										file: ele.downloadUrl,
+										genre: ele.genre,
+										id: ele.id,
+										title: ele.title,
+										src: ele.imageUrl,
+									};
+									this.playList.push(obj);
+								}
 							});
 						});
 				}
@@ -814,7 +937,18 @@ export default {
 							this.playList = arrList.splice(index);
 							res.data.forEach((ele) => {
 								let idx = this.playList.findIndex((item) => item.id === ele.id);
-								if (idx < 0) this.playList.push(ele);
+
+								if (idx < 0) {
+									let obj = {
+										artist: ele.artist,
+										file: ele.downloadUrl,
+										genre: ele.genre,
+										id: ele.id,
+										title: ele.title,
+										src: ele.imageUrl,
+									};
+									this.playList.push(obj);
+								}
 							});
 						});
 				}
@@ -852,7 +986,7 @@ export default {
 
 				let index_fav_custom = this.customs.findIndex((item) => item.id === arr_id[0]);
 				this.customs[index_fav_custom].fav = false;
-				
+
 				localStorage.setItem('fav_tracks', JSON.stringify(new_fav_tracks));
 
 				if (arr_id[2] === 'custom') {
@@ -901,6 +1035,22 @@ export default {
 						title: ele.title,
 						src: ele.imageUrl,
 					};
+
+					this.all_songs++;
+
+					if (ele.genre === 'love') this.love_songs++;
+
+					if (ele.genre === 'party') this.party_songs++;
+
+					if (ele.genre === 'hip-hop') this.hip_hop_songs++;
+
+					if (ele.genre === 'classical') this.classical_songs++;
+
+					if (ele.genre === 'pop') this.pop_songs++;
+
+					if (ele.genre === 'rock') this.rock_songs++;
+
+					if(ele.genre === 'sad') this.sad_songs++
 
 					let fav_tracks = JSON.parse(localStorage.getItem('fav_tracks'));
 					if (fav_tracks !== null && fav_tracks.indexOf(ele.id) >= 0) {
