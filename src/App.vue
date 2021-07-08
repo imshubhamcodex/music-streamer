@@ -475,6 +475,9 @@ export default {
 		},
 
 		async playlist(id) {
+			if (this.nav_show) {
+				this.toggleNav();
+			}
 			this.setID = id;
 			await axios
 				.get('https://us-central1-streamer-22d50.cloudfunctions.net/getMusicOfGenre?genre=' + id)
