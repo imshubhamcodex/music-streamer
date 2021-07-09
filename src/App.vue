@@ -576,7 +576,7 @@ export default {
       if (
         document.getElementById("see_all_custom").textContent.toLowerCase() ===
           "hide" &&
-        this.tempCustoms.length <= 12
+        this.tempCustoms.length <= 24
       ) {
         document.getElementById("see_all_custom").textContent = "see all";
         gsap.fromTo(
