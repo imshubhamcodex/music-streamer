@@ -18,7 +18,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3" style="max-width: 20px">{{ page.icon }}</i>
-							<p>{{ page.name }}  {{page.id==='home'? "( "+all_songs +" )":' '}} </p>
+							<p>{{ page.name }} {{ page.id === 'home' ? '( ' + all_songs + ' )' : ' ' }}</p>
 						</button>
 					</div>
 					<div class="mx-2" style="color: white">
@@ -30,7 +30,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">favorite</i>
-							<p>Favorite ( {{this.fav.length}} )</p>
+							<p>Favorite ( {{ this.fav.length }} )</p>
 						</button>
 						<button
 							@click="playlist('love')"
@@ -39,7 +39,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">volunteer_activism</i>
-							<p>Love  ( {{ love_songs }} )</p>
+							<p>Love ( {{ love_songs }} )</p>
 						</button>
 						<button
 							@click="playlist('party')"
@@ -48,7 +48,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">celebration</i>
-							<p>Party  ( {{ party_songs }} )</p>
+							<p>Party ( {{ party_songs }} )</p>
 						</button>
 						<button
 							@click="playlist('hip-hop')"
@@ -57,7 +57,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">nightlife</i>
-							<p>Hip Hop  ( {{ hip_hop_songs }} )</p>
+							<p>Hip Hop ( {{ hip_hop_songs }} )</p>
 						</button>
 						<button
 							@click="playlist('classical')"
@@ -66,7 +66,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">piano</i>
-							<p>Classical  ( {{ classical_songs }} ) </p>
+							<p>Classical ( {{ classical_songs }} )</p>
 						</button>
 						<button
 							@click="playlist('pop')"
@@ -75,7 +75,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">equalizer</i>
-							<p>Pop  ( {{ pop_songs }} )</p>
+							<p>Pop ( {{ pop_songs }} )</p>
 						</button>
 						<button
 							@click="playlist('rock')"
@@ -84,7 +84,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">speaker</i>
-							<p>Rock  ( {{ rock_songs }} )</p>
+							<p>Rock ( {{ rock_songs }} )</p>
 						</button>
 						<button
 							@click="playlist('sad')"
@@ -93,7 +93,7 @@
 							}`"
 						>
 							<i class="material-icons mr-3">sentiment_dissatisfied</i>
-							<p>Sad  ( {{ sad_songs }} )</p>
+							<p>Sad ( {{ sad_songs }} )</p>
 						</button>
 					</div>
 					<div class="h-px w-full bg-light my-3"></div>
@@ -123,7 +123,7 @@
 							<i class="material-icons mr-3 text-sm hover:text-white" style="zoom: 1.5">menu</i>
 						</button>
 						<span class="ml-5"></span>
-						<button
+						<!-- <button
 							class="px-3 py-2 mt-5 ml-2 hover:text-white hover:text-white"
 							style="zoom: 0.5; width: 50px; height: 50px; border-radius: 50%; border: 1px solid white"
 						>
@@ -135,7 +135,7 @@
 							style="zoom: 0.5; width: 50px; height: 50px; border-radius: 50%; border: 1px solid white"
 						>
 							<i class="material-icons mr-3 text-sm hover:text-white" style="zoom: 1.5">arrow_right</i>
-						</button>
+						</button> -->
 					</div>
 					<!--header end-->
 
@@ -172,7 +172,7 @@
 								see all
 							</h2>
 						</div>
-						<div class="w-full flex flex-wrap flex_div">
+						<div class="w-full flex flex-wrap flex_div recent-class">
 							<div
 								class="p-2 w-48 relative"
 								v-for="(recent, index) in tempRecents"
@@ -262,7 +262,7 @@
 						<h2 class="ml-2 mb-1 text-xs text-lightest text-white tracking-wider">
 							Get better recommendation more you listen
 						</h2>
-						<div class="w-full flex flex-wrap flex_div">
+						<div class="w-full flex flex-wrap flex_div custom-class">
 							<div
 								class="p-2 w-48 relative"
 								v-for="(custom, index) in tempCustoms"
@@ -398,6 +398,7 @@
 <script>
 import Player from './components/Player.vue';
 import axios from 'axios';
+import gsap from 'gsap';
 export default {
 	components: {
 		Player,
@@ -441,7 +442,7 @@ export default {
 			classical_songs: 0,
 			pop_songs: 0,
 			rock_songs: 0,
-			sad_songs:0
+			sad_songs: 0,
 		};
 	},
 	methods: {
@@ -455,8 +456,10 @@ export default {
 
 			if (document.getElementById('see_all_custom').textContent.toLowerCase() === 'hide') {
 				document.getElementById('see_all_custom').textContent = 'see all';
+				gsap.fromTo('.custom-class', { opacity: 0.1, y: 100 }, { opacity: 1, y: 0, duration: 1, ease: 'expo' });
 			} else {
 				document.getElementById('see_all_custom').textContent = 'hide';
+				gsap.fromTo('.custom-class', { opacity: 0.1, y: -200 }, { opacity: 1, y: 0, duration: 1.5, ease: 'expo' });
 			}
 		},
 		showAllRecent() {
@@ -469,8 +472,10 @@ export default {
 
 			if (document.getElementById('see_all_recent').textContent.toLowerCase() === 'hide') {
 				document.getElementById('see_all_recent').textContent = 'see all';
+				gsap.fromTo('.recent-class', { opacity: 0.1, y: 100 }, { opacity: 1, y: 0, duration: 1, ease: 'expo' });
 			} else {
 				document.getElementById('see_all_recent').textContent = 'hide';
+				gsap.fromTo('.recent-class', { opacity: 0.1, y: -200 }, { opacity: 1, y: 0, duration: 1.5, ease: 'expo' });
 			}
 		},
 
@@ -478,6 +483,7 @@ export default {
 			if (this.nav_show) {
 				this.toggleNav();
 			}
+			document.getElementById('see_all_recent').textContent = 'see all';
 			this.setID = id;
 			await axios
 				.get('https://us-central1-streamer-22d50.cloudfunctions.net/getMusicOfGenre?genre=' + id)
@@ -792,13 +798,15 @@ export default {
 				document.getElementById(this.currentPlaying.id + 'hover-recent').classList.add('opacity-0');
 			} else {
 				// stop playing song
-				document.getElementById(
-					this.currentPlaying.id
-				).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;">play_arrow</i>`;
+				if (document.getElementById(this.currentPlaying.id) !== null) {
+					document.getElementById(
+						this.currentPlaying.id
+					).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;">play_arrow</i>`;
 
-				document.getElementById(this.currentPlaying.id + 'hover').classList.remove('opacity-100');
+					document.getElementById(this.currentPlaying.id + 'hover').classList.remove('opacity-100');
 
-				document.getElementById(this.currentPlaying.id + 'hover').classList.add('opacity-0');
+					document.getElementById(this.currentPlaying.id + 'hover').classList.add('opacity-0');
+				}
 			}
 
 			this.start(id);
@@ -1023,6 +1031,10 @@ export default {
 		},
 	},
 
+	gAnimi() {
+		gsap.to('.recent-class', { duration: 2, x: 300, ease: 'back' });
+	},
+
 	async mounted() {
 		await axios
 			.get('https://us-central1-streamer-22d50.cloudfunctions.net/getMusic')
@@ -1053,7 +1065,7 @@ export default {
 
 					if (ele.genre === 'rock') this.rock_songs++;
 
-					if(ele.genre === 'sad') this.sad_songs++
+					if (ele.genre === 'sad') this.sad_songs++;
 
 					let fav_tracks = JSON.parse(localStorage.getItem('fav_tracks'));
 					if (fav_tracks !== null && fav_tracks.indexOf(ele.id) >= 0) {
@@ -1115,8 +1127,15 @@ export default {
 				console.log('No fav tracks');
 			}
 		}
-	},
+		gsap.fromTo('.recent-class', { opacity: 0.1, x: -200 }, { opacity: 1, x: 0, duration: 1.5, ease: 'expo' });
+		gsap.fromTo('.custom-class', { opacity: 0.1, x: -200 }, { opacity: 1, x: 0, duration: 1.5, ease: 'expo' })
 
+	},
+	watch: {
+		recents: function () {
+			gsap.fromTo('.recent-class', { opacity: 0.1, x: -200 }, { opacity: 1, x: 0, duration: 1.5, ease: 'expo' });
+		},
+	},
 	created() {
 		var x = window.scrollX;
 		var y = window.scrollY;
