@@ -796,12 +796,15 @@ export default {
 
       this.toggleNav();
     },
-    updateSelectedIndex(id) {
+    updateSelectedIndex(music_id) {
       this.stop(this.currentPlaying.id);
-      this.startAndSet(id);
+      this.startAndSet(music_id);
     },
     clickOnPlay(id) {
-      if (sessionStorage.getItem("recent_active") === "true") {
+      if (
+        sessionStorage.getItem("recent_active") === "true" &&
+        document.getElementById(id + "hover-recent") !== null
+      ) {
         document
           .getElementById(id + "hover-recent")
           .classList.remove("opacity-0");
@@ -814,13 +817,15 @@ export default {
           id + "recent"
         ).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;padding-left:145px;">stop_arrow</i>`;
       } else {
-        document.getElementById(id + "hover").classList.remove("opacity-0");
+        if (document.getElementById(id + "hover") !== null) {
+          document.getElementById(id + "hover").classList.remove("opacity-0");
 
-        document.getElementById(id + "hover").classList.add("opacity-100");
+          document.getElementById(id + "hover").classList.add("opacity-100");
 
-        document.getElementById(
-          id
-        ).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;padding-left:145px;">stop_arrow</i>`;
+          document.getElementById(
+            id
+          ).innerHTML = `<i class="material-icons text-2xl pt-1" style="color: white;padding-left:145px;">stop_arrow</i>`;
+        }
       }
     },
     clickOnPause(id) {
@@ -910,6 +915,12 @@ export default {
           return ele.id === id;
         });
       } else {
+        music = [...this.customs].filter((ele) => {
+          return ele.id === id;
+        });
+      }
+
+      if (music.length === 0) {
         music = [...this.customs].filter((ele) => {
           return ele.id === id;
         });
@@ -1015,6 +1026,12 @@ export default {
           return ele.id === id;
         });
       } else {
+        music = [...this.customs].filter((ele) => {
+          return ele.id === id;
+        });
+      }
+
+      if (music.length === 0) {
         music = [...this.customs].filter((ele) => {
           return ele.id === id;
         });
